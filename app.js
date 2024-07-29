@@ -19,19 +19,32 @@ async function main() {
   await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
 }
 
-app.get("/testListing", async (req, res) => {
-    let newListing = new Listing({
-        title: "My New Villa",
-        description: "By the Beach",
-        price: 200000,
-        location: "Compengurt, Goa",
-        country: "India",
-    });
+// app.get("/testListing", async (req, res) => {
+//     let newListing = new Listing({
+//         title: "My New Villa",
+//         description: "By the Beach",
+//         price: 200000,
+//         location: "Compengurt, Goa",
+//         country: "India",
+//     });
 
-    await newListing.save();
-    console.log("Data Saved Successfully");
-    res.send("Working Perfectly");
+//     await newListing.save();
+//     console.log("Data Saved Successfully");
+//     res.send("Working Perfectly");
+// });
+
+
+// Index Route
+app.get("/listings", async (req, res) => {
+    const allListings = await Listing.find({});
+    res.render("listings/index.ejs", {allListings});
 });
+
+app.get("/listings/:id", async (req, res) => {
+    let {id} = req.params;
+    let listing = await Listing.findById(id);
+    res.render("listings/show.ejs", {listing});
+})
 
 app.get("/", (req, res) => {
     res.send("Hello, I am root..");
